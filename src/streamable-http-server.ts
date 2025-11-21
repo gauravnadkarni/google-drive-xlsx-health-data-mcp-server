@@ -34,22 +34,24 @@ const registerAppListener = () => {
   const port = parseInt(process.env.PORT || "3000");
   app
     .listen(port, () => {
-      console.log(`MCP Server running on http://localhost:${port}/mcp`);
+      process.env.MCP_TRANSPORT === "http" &&
+        console.log(`MCP Server running on http://localhost:${port}/mcp`);
     })
     .on("error", (error: unknown) => {
-      console.error("Server error:", error);
+      process.env.MCP_TRANSPORT === "http" &&
+        console.error("Server error:", error);
       process.exit(1);
     })
     .on("close", () => {
-      console.log("Server closed");
+      process.env.MCP_TRANSPORT === "http" && console.log("Server closed");
       process.exit(0);
     })
     .on("SIGINT", () => {
-      console.log("Server closed");
+      process.env.MCP_TRANSPORT === "http" && console.log("Server closed");
       process.exit(0);
     })
     .on("SIGTERM", () => {
-      console.log("Server closed");
+      process.env.MCP_TRANSPORT === "http" && console.log("Server closed");
       process.exit(0);
     });
 };

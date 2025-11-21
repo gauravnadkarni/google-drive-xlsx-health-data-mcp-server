@@ -5,5 +5,4 @@ export async function startStdioServer(server: McpServer): Promise<void> {
   // Keep STDIO for local development/testing
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.debug("Health Data MCP server running on stdio (local mode)");
 }

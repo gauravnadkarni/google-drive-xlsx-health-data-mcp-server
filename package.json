@@ -1,16 +1,19 @@
 {
-  "name": "gdrive-mcp",
+  "name": "google-drive-xlsx-health-data-mcp-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "MCP server for health data analysis from Google Drive",
+  "author": "Gaurav Nadkarni <nadkarnigaurav@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gauravnadkarni/google-drive-xlsx-health-data-mcp-server.git"
+  },
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
     "@types/cors": "^2.8.19",
