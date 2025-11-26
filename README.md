@@ -5,6 +5,12 @@
 
 A Model Context Protocol (MCP) server for accessing and analyzing health metrics data stored in Google Drive spreadsheets.
 
+## 📖 Related Article
+
+📚 **Read the accompanying Medium article**: [What I Learned Building My First MCP Server From Scratch](https://medium.com/@nadkarnigaurav/what-i-learned-building-my-first-mcp-server-from-scratch-6e53e268453a)
+
+_Learn about the architecture, implementation details, and real-world use cases of this MCP server in the comprehensive technical write-up._
+
 ## Features
 
 - **Health Data Integration**: Connects to Google Drive to access health metrics data
@@ -42,10 +48,16 @@ npm install
 MCP server can be run in two modes:
 
 1. STDIO Mode:
-   In this mode, the MCP server communicates with the client via standard input/output (stdio) streams. The server runs as a child process, and all communication happens through stdin/stdout pipes. This is ideal for local development and testing as it requires no network configuration and provides direct process-to-process communication.
+   Local process communication, ideal for single-user desktop applications.
 
 2. HTTP Mode:
-   In this mode, the MCP server runs as an HTTP server and communicates with clients via HTTP/WebSocket protocols. This enables remote access, multi-client connections, and production deployment scenarios. It's suitable for cloud deployment, cross-machine access, and when multiple applications need to connect to the same MCP server instance.
+   Remote server access, supports multiple clients and cloud deployment.
+
+## Building the Project
+
+```bash
+npm run build
+```
 
 ## Running the Server
 
@@ -59,6 +71,12 @@ To run the server in HTTP mode:
 
 ```bash
 MCP_TRANSPORT=http npm run start
+```
+
+## Running the Project in dev mode
+
+```bash
+npm run dev
 ```
 
 Required environment configurations:
@@ -79,3 +97,79 @@ DOTENV_CONFIG_QUIET="true" # Set to true to suppress dotenv warnings (optional f
 - For STDIO mode, you should set the GOOGLE_DRIVE_FILE_ID and GOOGLE_CREDENTIALS_PATH environment variables in the client application (example claude code mcp json file or the MCP inspector)
 - For HTTP mode, you should set the GOOGLE_DRIVE_FILE_ID and GOOGLE_CREDENTIALS_PATH environment variables in the server application (example .env file)
 - STDIO mode is the default mode and in case no MCP_TRANSPORT environment variable is set, it will run in STDIO mode.
+
+## Google Cloud Setup
+
+- Create a project in Google Cloud Console
+- Enable the Google Drive API
+- Create a Service Account and download the credentials JSON file
+- Place the credentials file in your project root as credentials.json
+
+## Spreadsheet Setup
+
+- Upload the sample health data file (from ./uploads directory) to your Google Drive
+- Share the file with your service account email (viewer permissions)
+- Copy the File ID from the Google Drive URL
+
+Claude Desktop (STDIO Mode)
+Add to your claude_desktop_config.json:
+
+```json
+{
+  "mcpServers": {
+    "health-data": {
+      "command": "node",
+      "args": ["/absolute/path/to/dist/server.js"],
+      "env": {
+        "GOOGLE_DRIVE_FILE_ID": "your_file_id",
+        "GOOGLE_CREDENTIALS_PATH": "/path/to/credentials.json",
+        "DOTENV_CONFIG_QUIET": "true"
+      }
+    }
+  }
+}
+```
+
+## To run MCP Inspector
+
+```
+npx @modelcontextprotocol/inspector
+```
+
+## 🛠️ Available Tools
+
+The server provides 12 data retrieval tools:
+
+get_daily_metrics - Health data for specific dates
+
+get_date_range_metrics - Data across date ranges
+
+get_activity_data - Steps, workouts, calories burned
+
+get_sleep_data - Sleep quality and patterns
+
+get_heart_data - Heart rate and recovery metrics
+
+get_nutrition_data - Nutritional intake tracking
+
+get_metric_history - Historical trends for specific metrics
+
+get_user_profile - User information and goals
+
+get_weekly_data - Weekly aggregated health data
+
+get_monthly_data - Monthly health overviews
+
+get_seasonal_data - Seasonal pattern analysis
+
+get_metric_range - Custom metric analysis across dates
+
+## Data Flow
+
+Authentication: Service account credentials validate Google Drive access
+
+Data Retrieval: Excel spreadsheet downloaded and parsed from Drive
+
+Query Processing: Tools filter and structure health data based on LLM requests
+
+Response Formatting: Structured JSON responses for LLM analysis
